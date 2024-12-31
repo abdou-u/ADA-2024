@@ -1,4 +1,5 @@
 import json
+from textblob import TextBlob
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 def get_day(date_str):
@@ -166,7 +167,8 @@ def create_ethnicity_list(data_str):
         .replace('afro', 'african')\
         .replace('afro-', 'african ')\
         .replace('south african', 'south_african')\
-        .replace('african-american', 'african american')
+        .replace('african-american', 'african american')\
+        .replace('jews', 'jewish')
     
     # Split the string into a list of ethnicity names
     return new.split()
@@ -213,3 +215,14 @@ def categorize_age_group(age):
         return 'adult'
     else:
         return 'senior'
+
+def get_textblob_sentiment(text):
+    blob = TextBlob(text)
+    return blob.sentiment
+
+def add_family(ethnicity):
+    if isinstance(ethnicity, list) and \
+        ('english' in ethnicity or 'irish' in ethnicity or 'scottish' in ethnicity) \
+            and 'british' not in ethnicity:
+        ethnicity.append('british')
+    return ethnicity
